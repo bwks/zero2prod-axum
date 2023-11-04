@@ -1,11 +1,9 @@
-use axum::{extract::Path, routing::get, Router};
+use axum::{http::StatusCode, response::IntoResponse, routing::get, Router};
 
 #[tokio::main]
 async fn main() {
     // build the app with a route
-    let app = Router::new()
-        .route("/", get(|| async { "Hello, World!" }))
-        .route("/:name", get(move |path| greet(path)));
+    let app = Router::new().route("/health-check", get(health_check));
 
     axum::Server::bind(&"172.31.255.20:8888".parse().unwrap())
         .serve(app.into_make_service())
@@ -13,6 +11,6 @@ async fn main() {
         .unwrap();
 }
 
-async fn greet(Path(name): Path<String>) -> String {
-    format!("Hello {}", &name)
+async fn health_check() -> impl IntoResponse {
+    StatusCode::OK
 }
