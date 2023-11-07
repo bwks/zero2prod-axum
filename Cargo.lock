@@ -1333,7 +1333,6 @@ name = "zero2prod-axum"
 version = "0.1.0"
 dependencies = [
  "axum",
- "hyper 0.14.27",
  "reqwest",
  "tokio",
 ]

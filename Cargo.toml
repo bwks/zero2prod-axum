@@ -18,7 +18,6 @@ rustflags = ["-C", "linker=clang", "-C", "link-arg=-fuse-ld=lld"]
 # 0.7 has breaking changes, so I want to use the gitlab repo until it's published.
 axum = { git = "https://github.com/tokio-rs/axum" }
 tokio = { version = "1.0", features = ["full"] }
-hyper = { version = "0.14", features = ["full"] }
 
 [dev-dependencies]
 reqwest = "0.11"
