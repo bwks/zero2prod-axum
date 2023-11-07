@@ -3,11 +3,22 @@ name = "zero2prod-axum"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+path = "src/lib.rs"
+name = "zero2prod"
+
+[[bin]]
+path = "src/main.rs"
+name = "zero2prod"
 
 [target.x86_64-unknown-linux-gnu]
 rustflags = ["-C", "linker=clang", "-C", "link-arg=-fuse-ld=lld"]
 
 [dependencies]
-axum = "0.6.20"
+# 0.7 has breaking changes, so I want to use the gitlab repo until it's published.
+axum = { git = "https://github.com/tokio-rs/axum" }
 tokio = { version = "1.0", features = ["full"] }
+hyper = { version = "0.14", features = ["full"] }
+
+[dev-dependencies]
+reqwest = "0.11"
