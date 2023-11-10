@@ -1,31 +1,29 @@
-use axum::{self, extract::Form};
-use serde::Deserialize;
-use tokio::net::TcpListener;
+use actix_web::dev::Server;
+use actix_web::{web, App, HttpResponse, HttpServer};
+use std::net::TcpListener;
 
-use axum::{http::StatusCode, response::IntoResponse, routing::get, routing::post, Router};
-
-#[derive(Debug, Deserialize)]
+#[derive(serde::Deserialize)]
 struct FormData {
     email: String,
     name: String,
 }
 
-pub fn app() -> Router {
-    Router::new()
-        .route("/health-check", get(health_check))
-        .route("/subscriptions", post(subscribe))
+async fn health_check() -> HttpResponse {
+    HttpResponse::Ok().finish()
 }
 
-pub async fn run(listener: TcpListener, app: Router) -> Result<(), std::io::Error> {
-    axum::serve(listener, app).await?;
-    Ok(())
+async fn subscribe(_form: web::Form<FormData>) -> HttpResponse {
+    HttpResponse::Ok().finish()
 }
 
-async fn health_check() -> impl IntoResponse {
-    StatusCode::OK
-}
+pub fn run(listener: TcpListener) -> Result<Server, std::io::Error> {
+    let server = HttpServer::new(|| {
+        App::new()
+            .route("/health-check", web::get().to(health_check))
+            .route("/subscriptions", web::post().to(subscribe))
+    })
+    .listen(listener)?
+    .run();
 
-async fn subscribe(Form(form_data): Form<FormData>) -> impl IntoResponse {
-    // println!("{:#?}", form_data);
-    StatusCode::OK
+    Ok(server)
 }
