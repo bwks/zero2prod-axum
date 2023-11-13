@@ -1,9 +1,22 @@
-use std::net::TcpListener;
+use tokio::net::TcpListener;
 
-use zero2prod::run;
+use zero2prod::configuration::get_configuration;
+use zero2prod::startup::{app, run};
 
 #[tokio::main]
 async fn main() -> Result<(), std::io::Error> {
-    let listener = TcpListener::bind("172.31.255.20:7777").expect("unable to bind to address");
-    run(listener)?.await
+    let configuration = get_configuration().expect("failed to read configuration");
+    let address = format!(
+        "{}:{}",
+        configuration.database.host, configuration.application_port
+    );
+
+    let listener = TcpListener::bind(address).await.unwrap();
+    let app = app();
+
+    // Run forever-ish...
+    if let Err(err) = run(listener, app).await {
+        eprintln!("server error: {}", err);
+    };
+    Ok(())
 }

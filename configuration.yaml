@@ -1,0 +1,7 @@
+application_port: 7777
+database:
+  host: "172.31.255.20"
+  port: 65432
+  username: "postgres"
+  password: "password"
+  database_name: "newsletter-axum"

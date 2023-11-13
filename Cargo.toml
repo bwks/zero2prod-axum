@@ -17,8 +17,14 @@ rustflags = ["-C", "linker=clang", "-C", "link-arg=-fuse-ld=lld"]
 [dependencies]
 # 0.7 has breaking changes, so I want to use the gitlab repo until it's published.
 axum = { git = "https://github.com/tokio-rs/axum" }
-tokio = { version = "1.0", features = ["full"] }
+config = "0.13"
 serde = { version = "1", features = ["derive"] }
+tokio = { version = "1.0", features = ["full"] }
+
+[dependencies.sqlx]
+version = "0.7"
+default-features = false
+features = ["runtime-tokio-rustls", "macros", "postgres", "uuid", "chrono", "migrate"]
 
 [dev-dependencies]
 reqwest = "0.11"
